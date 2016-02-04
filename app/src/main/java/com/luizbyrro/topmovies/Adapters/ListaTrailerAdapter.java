@@ -1,9 +1,11 @@
 package com.luizbyrro.topmovies.Adapters;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,6 @@ import com.luizbyrro.topmovies.json.Trailer;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by Luiz Byrro on 03/02/2016.
@@ -74,7 +75,20 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
                     builder.setTitle("Open YouTube?");
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(baseYoutubeURL + trailer.getKey())));
+
+
+
+                            if(isYouTubeAppInstalled("com.google.android.youtube")){
+                                /*PackageManager pm = context.getPackageManager();
+                                Intent launchIntent = pm.getLaunchIntentForPackage("com.google.android.youtube");
+                                launchIntent.setData(Uri.parse(baseYoutubeURL + trailer.getKey()+";feature=youtube_gdata"));
+                                context.startActivity(launchIntent);*/
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + trailer.getKey()));
+                                context.startActivity(intent);
+                            }else{
+                                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(baseYoutubeURL + trailer.getKey())));
+                            }
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -126,6 +140,16 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
         notifyDataSetChanged();
     }
 
+
+    protected boolean isYouTubeAppInstalled(String packageName) {
+        Intent mIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (mIntent != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 
 }
