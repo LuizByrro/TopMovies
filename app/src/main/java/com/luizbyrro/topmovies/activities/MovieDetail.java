@@ -80,11 +80,6 @@ public class MovieDetail extends AppCompatActivity {
         mRecyclerView = (RecyclerView)findViewById(R.id.recycler_view_detail);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setNestedScrollingEnabled(false);
-/*        Nome.setText(info.getTitle());
-        Duracao.setText(info.getOriginal_language());
-        Sinopse.setText(info.getOverview());
-        Rating.setText(info.getVote_average()+"/10");
-        Ano.setText(info.getRelease_date().split("-")[0]);*/
         imagemFilme=(ImageView) findViewById(R.id.poster_detail);
 
         progress.setVisibility(View.VISIBLE);
@@ -195,8 +190,6 @@ public class MovieDetail extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
-                // if this doesn't work as desired, another possibility is to call `finish()` here.
                 onBackPressed();
                 return true;
             default:
