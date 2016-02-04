@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ public class MovieDetail extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try {
             Bundle bundle = getIntent().getExtras();
@@ -122,16 +124,21 @@ public class MovieDetail extends AppCompatActivity {
         final ProgressDialog load = new ProgressDialog(this);
         load.setMessage("Loading movie info...");
         load.show();
-        MoviesService.getMovieById(info.getId(),new retrofit.Callback<RetornoMovieInfo>() {
+        MoviesService.getMovieById(info.getId(), new retrofit.Callback<RetornoMovieInfo>() {
             @Override
             public void success(RetornoMovieInfo retornoMovieInfo, Response response) {
                 load.dismiss();
                 if (retornoMovieInfo != null) {
-                    if(retornoMovieInfo.getTitle()!=null)Nome.setText(retornoMovieInfo.getTitle());
-                    if(retornoMovieInfo.getRuntime()!=null)Duracao.setText(retornoMovieInfo.getRuntime()+"min");
-                    if(retornoMovieInfo.getOverview()!=null)Sinopse.setText(retornoMovieInfo.getOverview());
-                    if(retornoMovieInfo.getVote_average()!=null)Rating.setText(retornoMovieInfo.getVote_average()+"/10");
-                    if(retornoMovieInfo.getRelease_date()!=null)Ano.setText(retornoMovieInfo.getRelease_date().split("-")[0]);
+                    if (retornoMovieInfo.getTitle() != null)
+                        Nome.setText(retornoMovieInfo.getTitle());
+                    if (retornoMovieInfo.getRuntime() != null)
+                        Duracao.setText(retornoMovieInfo.getRuntime() + "min");
+                    if (retornoMovieInfo.getOverview() != null)
+                        Sinopse.setText(retornoMovieInfo.getOverview());
+                    if (retornoMovieInfo.getVote_average() != null)
+                        Rating.setText(retornoMovieInfo.getVote_average() + "/10");
+                    if (retornoMovieInfo.getRelease_date() != null)
+                        Ano.setText(retornoMovieInfo.getRelease_date().split("-")[0]);
                 }
 
                 Log.d("retornoMovieInfo", retornoMovieInfo.toString());
@@ -155,16 +162,16 @@ public class MovieDetail extends AppCompatActivity {
         MoviesService.getTrailerById(info.getId(), new retrofit.Callback<RetornoTrailer>() {
             @Override
             public void success(RetornoTrailer retornoTrailer, Response response) {
-               load.dismiss();
-                 if (retornoTrailer != null) {
-                    if(retornoTrailer.getResults()!=null){
-                        if(retornoTrailer.getResults().length==0){
+                load.dismiss();
+                if (retornoTrailer != null) {
+                    if (retornoTrailer.getResults() != null) {
+                        if (retornoTrailer.getResults().length == 0) {
                             Trailer.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             Trailer.setVisibility(View.VISIBLE);
                             final LinearLayoutManager layoutManager = new MyLinearLayoutManager(MovieDetail.this, LinearLayoutManager.VERTICAL, false);
                             final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_detail);
-                            mAdapter = new ListaTrailerAdapter(MovieDetail.this,retornoTrailer.getResults());
+                            mAdapter = new ListaTrailerAdapter(MovieDetail.this, retornoTrailer.getResults());
                             recyclerView.setLayoutManager(layoutManager);
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -189,5 +196,18 @@ public class MovieDetail extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
