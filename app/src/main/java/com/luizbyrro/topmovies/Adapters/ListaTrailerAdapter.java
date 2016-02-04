@@ -1,11 +1,9 @@
 package com.luizbyrro.topmovies.Adapters;
 
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +43,7 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
         this.context = context;
 
         mItems = new ArrayList<Trailer>();
-        for(int i=0; i<trailers.length;i++){
+        for (int i = 0; i < trailers.length; i++) {
             mItems.add(trailers[i]);
         }
 
@@ -66,38 +64,45 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
         final Trailer trailer = mItems.get(i);
 
-        viewHolder.trailer.setText("Trailer "+String.valueOf(i+1));
+        viewHolder.trailer.setText("Trailer " + String.valueOf(i + 1));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(trailer.getSite().equals("YouTube")){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Open YouTube?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-
-
-                            if(isYouTubeAppInstalled("com.google.android.youtube")){
-                                /*PackageManager pm = context.getPackageManager();
-                                Intent launchIntent = pm.getLaunchIntentForPackage("com.google.android.youtube");
-                                launchIntent.setData(Uri.parse(baseYoutubeURL + trailer.getKey()+";feature=youtube_gdata"));
-                                context.startActivity(launchIntent);*/
-
+                if (trailer.getSite().equals("YouTube")) {
+                    if (isYouTubeAppInstalled("com.google.android.youtube")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Open YouTubeApp?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + trailer.getKey()));
                                 context.startActivity(intent);
-                            }else{
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Open YouTube In Browser?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(baseYoutubeURL + trailer.getKey())));
                             }
-                        }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
+
                 }
             }
         });
@@ -135,7 +140,7 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
         notifyItemRangeChanged(position, mItems.size());
     }
 
-    public void clear(){
+    public void clear() {
         mItems.clear();
         notifyDataSetChanged();
     }
@@ -145,8 +150,7 @@ public class ListaTrailerAdapter extends RecyclerView.Adapter<ListaTrailerAdapte
         Intent mIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         if (mIntent != null) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
