@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TopMovies</string>
+    <string name="action_populares">Sort By Popularity</string>
+    <string name="action_melhorRating">Sort By Rating</string>
+    <string name="action_withoutSort">Without Sorting</string>
+    <string name="action_clearList">Clear List</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
+</resources>
